@@ -1,0 +1,293 @@
+1) Diferencia entre una CTE y una VISTA en SQL. ¿Cuándo usarías una CTE en lugar de una vista?
+
+La cte solo existe durante la ejecución de la consulta actual en cambio la vista persiste en la base de datos y se la puede usar en varias consultas.
+
+usaria la cte cuando necesitaria una consulta compleja que solo la usaria una vez, ideal para testing y probar algo.
+
+Una CTE (Common Table Expression) es temporal, tiene solamente alcance local, y es recursiva. 
+En cambio, una VISTA es persistente, puede utilizarse en cualquier lugar dentro de la base de datos y no puede llamarse a si misma.
+
+2) ¿Qué son las uniones SQL y por qué son importantes para el análisis de datos?. Indique los tipos de Uniones que se usan en SQL. ¿Puede explicar la diferencia entre LEFT OUTER JOIN e INNER JOIN? ¿Qué es una Self Join?
+
+Las uniones SQL (JOINs) son operaciones que combinan filas de dos o más tablas basándose en una condición relacionada entre ellas. Son fundamentales para el análisis de datos.
+
+Tipos de uniones en SQL
+
+el INNER JOIN devuelve solo las filas que tienen coincidencias en ambas tablas.
+
+Las uniones SQL son uniones que combinan filas de dos o más tablas en una base de datos relacional. Son cruciales para el análisis de datos porque permiten consolidar información que está distribuida en diferentes tablas, lo que facilita la exploración, la creación de informes y la obtención de información valiosa.
+
+LEFT OUTER  JOIN: devuelve todos los registros de la tabla izquierda y solamente los coincidentes en la derecha, muestra NULL en caso de que no haya coicidencia.
+INNER JOIN: devuelve registros con coicidencias en ambas tablas.
+
+SELF JOIN: es  una union consigo misma. Se utiliza cuando se necesita comparar dos filas dentro de una misma tabla.
+
+Diferencia entre LEFT OUTER JOIN e INNER JOIN
+La principal diferencia radica en qué filas se incluyen en el resultado.
+
+INNER JOIN: Actúa como una intersección. Solo devuelve las filas donde hay una coincidencia de valores en la columna de unión en ambas tablas.
+
+Ejemplo: Si unes una tabla de Clientes con una de Pedidos, un INNER JOIN solo mostrará los clientes que realmente han hecho un pedido. Los clientes sin pedidos no aparecerían en el resultado.
+
+LEFT OUTER JOIN: Incluye todas las filas de la tabla de la izquierda, incluso si no tienen una coincidencia en la tabla de la derecha.
+
+Ejemplo: Usando las mismas tablas, un LEFT JOIN mostraría a todos los clientes, incluidos aquellos que aún no han hecho un pedido. En las columnas de Pedidos, los clientes sin pedidos tendrían valores NULL.
+
+Una Self Join es una unión donde una tabla se une consigo misma. Se utiliza para combinar y comparar registros dentro de la misma tabla. Para realizar una Self Join, se deben usar alias para la tabla (ej. tabla as T1, tabla as T2) para que SQL pueda diferenciar entre las dos instancias de la tabla.
+
+Uso común: Buscar registros duplicados, encontrar jerarquías o relaciones dentro de los datos (por ejemplo, empleados que tienen un jefe en la misma tabla de empleados).
+
+3) ¿Puede explicar qué es una clave principal en SQL? ¿Puede una clave principal ser compuesta? De ser así, proporcione un ejemplo.
+
+Una Primary Key (PK, Clave Principal) es un campo que identifica de manera unica cada registro de una tabla de BBDD. Puede ser compuesta y estar formada por multiples campos.
+Como ejemplo, crearia una tablaen la que podria identificar a estudiantes 
+en especifico con una Clave Primaria Compuesta de "estudiante_id" y "curso_id", ambas Foreign Keys (FK, Clave Foranea).
+
+Una clave principal es una columna o conjunto de columnas que identifica de manera única cada fila en una tabla de base de datos. Es uno de los conceptos más fundamentales en el diseño de bases de datos relacionales.
+
+Características de una clave principal:
+Unicidad: Cada valor debe ser único en toda la tabla. No puede haber dos filas con el mismo valor de clave principal.
+
+No nulidad: Una clave principal nunca puede contener valores NULL. Cada fila debe tener un valor válido para la clave principal.
+
+Inmutabilidad: Idealmente, los valores de clave principal no deberían cambiar una vez asignados, ya que otras tablas pueden referenciarlos.
+
+Minimalidad: Debe contener el menor número de columnas necesarias para garantizar la unicidad.
+
+Cuándo usar claves compuestas:
+Cuando ninguna columna individual puede garantizar la unicidad
+En tablas de relación muchos-a-muchos
+Cuando la combinación de columnas tiene significado de negocio
+En tablas de transacciones que involucran múltiples entidades
+Ejemplo práctico de clave principal compuesta
+Consideremos una tabla que registra las inscripciones de estudiantes en cursos:
+
+sql
+CREATE TABLE inscripciones (
+    estudiante_id INT NOT NULL,
+    curso_id INT NOT NULL,
+    semestre VARCHAR(10) NOT NULL,
+    año INT NOT NULL,
+    fecha_inscripcion DATE,
+    calificacion DECIMAL(3,2),
+    
+    PRIMARY KEY (estudiante_id, curso_id, semestre, año)
+);
+En este ejemplo:
+
+estudiante_id: Por sí solo no es único (un estudiante puede tomar múltiples cursos)
+curso_id: Por sí solo no es único (un curso puede tener múltiples estudiantes)
+semestre: Por sí solo no es único
+año: Por sí solo no es único
+Sin embargo, la combinación de estos cuatro campos sí es única, porque:
+
+Un estudiante específico no puede inscribirse dos veces en el mismo curso en el mismo semestre del mismo año
+
+CREATE TABLE detalle_pedido (
+    pedido_id INT NOT NULL,
+    producto_id INT NOT NULL,
+    cantidad INT,
+    precio_unitario DECIMAL(10,2),
+    
+    PRIMARY KEY (pedido_id, producto_id)
+);
+
+4) ¿Cuál es la diferencia entre WHERE y un HAVING en SQL?
+
+Se diferencias porque WHERE se aplica antes de agrupar datos y no puede usar funciones de agregacion. En cambio, HAVING se aplica despues de agrupar datos junto con el GROUP BY 
+y puede usar funciones de agregacion.
+
+Cláusula WHERE
+WHERE filtra filas antes de que se realicen las agrupaciones y funciones de agregación.
+
+5) ¿Qué es la normalización en bases de datos SQL?. ¿Cuáles son las diferentes formas normales?
+
+La normalizacion en SQL es una proceso cuyos objetivos son eliminar redundancias y evitar anomalias al insertar, actualizar o eliminar informacion.
+Se dividen 3 Formas Normales (FN)
+1FN: separar datos multivaluados en una nueva entidad.
+2FN: todo campo no clave debe depender unica de una Clave Primaria.
+3FN: un campo No Clave no puede depender de otra Clave Primaria.
+
+6) ¿Qué es un índice en SQL y por qué se utiliza?
+
+el motivo por el cual se utilizan los indices son la mejoria del rendimiento de consultas las búsquedas que  requerirían escanear toda la tabla pueden ejecutarse mucho más rápido.
+Un indice es una estructura de datos que se utiliza para optimizar la velocidad de busqueda de datos de la BBDD. Se utilizan porque son una buena manera de optimizar las BBDD,
+aunque tiene la desventaja de que necesitan actualizaciones constantes a medida que la BBDD crece.
+
+7) ¿Cómo se agrupan los resultados utilizando funciones agregadas? ¿Cómo pueden las funciones agregadas afectar el rendimiento de las consultas?
+Los resultados que utlizan funciones agregadas se agrupan con la funciones GROUP BY. Las funciones agregadas (SUM, AVG, COUNT, ETC.) pueden afectar el rendimiento porque requieren
+procesar todos los registros del conjunto de datos.
+
+Las funciones agregadas en SQL permiten realizar cálculos sobre conjuntos de filas, generalmente combinadas con la cláusula GROUP BY para agrupar los datos según criterios específicos. Estas funciones procesan múltiples filas y devuelven un único valor por grupo.
+
+Funciones básicas:
+COUNT(): Cuenta el número de filas o valores no nulos
+SUM(): Suma valores numéricos
+AVG(): Calcula el promedio de valores numéricos
+MIN(): Encuentra el valor mínimo
+MAX(): Encuentra el valor máximo
+
+8) Comparta una historia sobre una ocasión en la que utilizó subconsultas con éxito para simplificar la recuperación de datos complejos.
+
+En un escenario comun, en el que se necesite encontrar a todos los empleados que ganan mas que el promedio y ademas trabajan en departamentos de mas de 10 empleados, seria muy
+complejo de lograr sin utilizar subconsultas, se necesitan multiples consultas separadas con logica adicional. Con una subconsulta, se simplificarias el problema al mantaner toda la
+logica en una consulta legible.
+
+Una historia de optimización con subconsultas: El caso del sistema de facturación
+Permíteme compartir una situación real donde las subconsultas transformaron completamente la forma de abordar un problema complejo de análisis de datos.
+El desafío inicial
+Trabajando en el sistema de una empresa de comercio electrónico, me enfrenté a un requerimiento aparentemente simple del área de finanzas: "Necesitamos un reporte que muestre todos los clientes que han gastado más del promedio en los últimos 6 meses, pero solo considerando aquellos que han realizado al menos 3 compras, y además queremos ver cuánto gastaron comparado con el top 10% de clientes."
+Al principio, mi primera reacción fue: "Esto va a requerir múltiples consultas y procesamiento en la aplicación." Pero sabía que había una forma más elegante.
+
+9) Explique el concepto de transacciones en SQL. ¿Qué son las propiedades ACID?
+
+Una transaccionm en SQL es una secuencia de una o mas declaraciones ejecutadas como una unica unidad de trabajo. Su proposito es que todas las operaciones sean completadas
+correctamente o hacer ROLLBACK si un error ocurre. Las propiedades ACID son:
+Atomicidad: toda informacion DEBE completarse correctamente o hacer ROLLBACK en caso de que una parte de esta falle.
+Consistencia: las transacciones DEBEN mantener restricciones de integridad al moverse de un estado valido a otro.
+Aislamiento: las transacciones estan aisladas la una de la otra para asegurar precision en los datos.
+Durabilidad: en caso de que el sistema falle, las transacciones seguiran en efecto.
+las propiedades ACID es el acrónimo que define las cuatro propiedades fundamentales que garantizan la confiabilidad de las transacciones en bases de datos
+Una transacción es una unidad indivisible de trabajo. Todas las operaciones dentro de la transacción se ejecutan completamente o ninguna se ejecuta.
+
+10) Puede explicar el proceso para administrar índices para poder garantizar un rendimiento eficiente de las consultas en Oracle?
+
+El proceso para administrar índices comienza con el análisis de planes de ejecución utilizando EXPLAIN PLAN para identificar consultas costosas, 
+seguido del examen de consultas frecuentes mediante AWR para determinar patrones de acceso e identificar columnas críticas, 
+la creación de índices específicos según el tipo de datos monitoreando su efectividad con V$OBJECT_USAGE, 
+y finalmente tareas de mantenimiento regular como actualización de estadísticas con DBMS_STATS y eliminación de índices no utilizados.
+
+La administración efectiva de índices en Oracle es un proceso continuo y multifacético que requiere un enfoque sistemático para mantener el rendimiento óptimo de las consultas. Los índices juegan un papel crucial en la optimización del rendimiento de las bases de datos Oracle, pero crear índices sin entender su impacto puede llevar a problemas de rendimiento.
+
+La administración efectiva de índices en Oracle requiere un enfoque proactivo que combine monitoreo continuo, análisis de patrones de uso, y mantenimiento preventivo programado. Los ajustes simples de índices pueden reducir el tiempo promedio de consulta de 15 segundos a menos de 1 segundo Oracle Database Performance Tuning Guide: Expert Solutions | Multishoring.
+La clave del éxito está en establecer procesos automatizados que mantengan los índices en condiciones óptimas mientras se adaptan a los patrones cambiantes de acceso a datos.
+
+11) ¿Cómo se puede realizar lógica condicional en una sentencia SQL?
+La logica condicional de una sentencia SQL se puede realizar con la expresion CASE seguido de WHEN y una condicion, y THEN y un resultado,
+con ELSE  usado si no se cumple ninguna condicion.
+
+La expresión CASE evalúa una serie de condiciones y devuelve un valor cuando se cumple la primera condición. Una vez que se encuentra una condición verdadera, la expresión se detiene y devuelve el resultado. Si no se cumple ninguna condición, devuelve el valor en la cláusula ELSE. Si no hay una cláusula ELSE, la expresión devuelve NULL.
+
+12) ¿Cuándo es mejor usar triggers en vez de procedimientos almacenados?
+
+Es mejor usar TRIGGERS cuando se necesite automatizacion que debe ejecutarse en respuesta a eventos especificos de la BBDD, sin intervencion del usario o aplicacion.
+
+Es mejor usar triggers en lugar de procedimientos almacenados cuando se necesita que la lógica de la base de datos se ejecute automáticamente en respuesta a un evento específico, como una operación de INSERT, UPDATE o DELETE en una tabla.
+
+ejemplo cuando es mejor usar triggers como la mejor opción
+
+Aplicar reglas de negocio o auditoría: Los triggers son ideales para garantizar que ciertas reglas de negocio se apliquen de manera consistente, sin importar desde dónde se origine el cambio de datos. Por ejemplo, se puede usar un trigger para:
+
+Validar datos: Asegurar que un nuevo registro cumpla con ciertas condiciones antes de ser insertado.
+
+
+A) Necesito que devuelvas todos los departamentos y sus empleados del esquema HR INCLUYENDO LOS DEPARTAMENTOS SIN EMPLEADOS (department_id is NULL).
+
+SELECT 
+    d.department_id,
+    d.department_name,
+    e.employee_id,
+    e.first_name,
+    e.last_name
+    FROM 
+    departments d
+    LEFT JOIN employees e ON d.department_id = e.department_id
+    ORDER BY 
+    d.department_name,
+    e.last_name,
+    e.first_name;
+
+SELECT 
+    d.department_id,
+    d.department_name,
+    d.manager_id,
+    d.location_id,
+    e.employee_id,
+    e.first_name,
+    e.last_name,
+    e.email,
+    e.phone_number,
+    e.hire_date,
+    e.job_id,
+    e.salary,
+    e.commission_pct,
+    e.manager_id as employee_manager_id
+FROM departments d
+LEFT JOIN employees e ON d.department_id = e.department_id
+ORDER BY d.department_name, e.last_name, e.first_name;
+
+B) Necesito una Query que devuelva los id de los departamentos con más de 10 empleados.
+
+SELECT 
+    department_id
+   FROM 
+    employees
+   WHERE 
+    department_id IS NOT NULL
+   GROUP BY 
+    department_id
+   HAVING 
+       COUNT(*) > 10;
+
+C) Actualizar el sueldo en un 6% de todos los empleados que trabajen en el departmento IT_PROG.
+
+UPDATE employees 
+   SET salary = salary * 1.06
+   WHERE job_id = 'IT_PROG';
+
+Versión con verificación previa (recomendada):
+Primero verificar qué empleados se van a actualizar
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    job_id,
+    salary as current_salary,
+    ROUND(salary * 1.06, 2) as new_salary,
+    ROUND((salary * 0.06), 2) as salary_increase
+FROM employees
+WHERE job_id = 'IT_PROG';
+
+D) Generar un listado con el nombre, el apellido, el salario y el N° de Departamento de los empleados  que tengan el mismo cargo que William Smith ordenados por apellido.
+
+SELECT 
+    e.first_name AS nombre,
+    e.last_name AS apellido,
+    e.salary AS salario,
+    e.department_id AS numero_departamento,
+    e.job_id AS trabajo
+   FROM 
+    employees e
+   WHERE 
+    e.job_id = (
+        SELECT job_id 
+        FROM employees 
+        WHERE first_name = 'William' 
+        AND last_name = 'Smith'
+    )
+   ORDER BY 
+      e.last_name; 
+
+Versión usando JOIN (alternativa):
+
+SELECT DISTINCT
+    e1.first_name as nombre,
+    e1.last_name as apellido,
+    e1.salary as salario,
+    e1.department_id as numero_departamento
+FROM employees e1
+JOIN employees e2 ON e1.job_id = e2.job_id
+WHERE e2.first_name = 'William' 
+  AND e2.last_name = 'Smith'
+ORDER BY e1.last_name, e1.first_name;
+ 
+  
+
+
+
+
+
+
+
+
+
